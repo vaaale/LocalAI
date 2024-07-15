@@ -272,8 +272,6 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
                 self.controlnet = None
             # Assume directory from request.ModelFile.
             # Only if request.LoraAdapter it's not an absolute path
-            fp = open("/build/models/debugoutput.txt", "w")
-            print(f"DEBUG: {request.LoraAdapter}, {request.ModelFile}, {os.path.isabs(request.LoraAdapter)}", file=fp)
             if request.LoraAdapter and request.ModelFile != "" and not os.path.isabs(request.LoraAdapter) and request.LoraAdapter:
                 # get base path of modelFile
                 modelFileBase = os.path.dirname(request.ModelFile)
@@ -284,11 +282,9 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             if request.LoraAdapter:
                 # Check if its a local file and not a directory ( we load lora differently for a safetensor file )
                 if os.path.exists(request.LoraAdapter) and not os.path.isdir(request.LoraAdapter):
-                    print(f"Loading Lora Adapter from: {request.LoraAdapter}", file=fp)
                     # self.load_lora_weights(request.LoraAdapter, 1, device, torchType)
                     self.pipe.load_lora_weights(request.LoraAdapter)
                 else:
-                    print(f"Lora Adapter: Will attache to process: {request.LoraAdapter}", file=fp)
                     self.pipe.unet.load_attn_procs(request.LoraAdapter)
 
             if request.CUDA:
@@ -298,8 +294,6 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             if XPU:
                 self.pipe = self.pipe.to("xpu")
         except Exception as err:
-            print(f"FUCK! That went straight to Shit!! {err}", file=fp)
-            print(traceback.format_exc(), file=fp)
             return backend_pb2.Result(success=False, message=f"Unexpected {err=}, {type(err)=}")
         # Implement your logic here for the LoadModel service
         # Replace this with your desired response
