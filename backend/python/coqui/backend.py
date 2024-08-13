@@ -8,8 +8,12 @@ import argparse
 import signal
 import sys
 import os
+from pathlib import Path
+
 import backend_pb2
 import backend_pb2_grpc
+import json
+import traceback
 
 import torch
 from TTS.api import TTS
@@ -31,7 +35,6 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
     def Health(self, request, context):
         return backend_pb2.Reply(message=bytes("OK", 'utf-8'))
     def LoadModel(self, request, context):
-
         # Get device
         # device = "cuda" if request.CUDA else "cpu"
         if torch.cuda.is_available():
@@ -77,10 +80,10 @@ class BackendServicer(backend_pb2_grpc.BackendServicer):
             if self.tts.is_multi_speaker and self.AudioPath is None and request.voice is None:
                 return backend_pb2.Result(success=False, message=f"Model is multi-speaker, but no speaker was provided")
 
-            if self.tts.is_multi_speaker and request.voice is not None:
+            if self.tts.is_multi_speaker and request.voice is not None and not Path(f"{request.voice}").is_file():
                self.tts.tts_to_file(text=request.text, speaker=request.voice, language=lang, file_path=request.dst)
             else:
-                self.tts.tts_to_file(text=request.text, speaker_wav=self.AudioPath, language=lang, file_path=request.dst)
+                self.tts.tts_to_file(text=request.text, speaker_wav=str(Path(f"{request.voice}")), language=lang, file_path=request.dst)
         except Exception as err:
             return backend_pb2.Result(success=False, message=f"Unexpected {err=}, {type(err)=}")
         return backend_pb2.Result(success=True)

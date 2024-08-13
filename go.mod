@@ -293,3 +293,21 @@ require (
 	howett.net/plist v1.0.0 // indirect
 	lukechampine.com/blake3 v1.2.1 // indirect
 )
+
+replace github.com/donomii/go-rwkv.cpp => /home/alex/GolandProjects/LocalAI/sources/go-rwkv.cpp
+
+replace github.com/ggerganov/whisper.cpp => /home/alex/GolandProjects/LocalAI/sources/whisper.cpp
+
+replace github.com/ggerganov/whisper.cpp/bindings/go => /home/alex/GolandProjects/LocalAI/sources/whisper.cpp/bindings/go
+
+replace github.com/go-skynet/go-bert.cpp => /home/alex/GolandProjects/LocalAI/sources/go-bert.cpp
+
+replace github.com/M0Rf30/go-tiny-dream => /home/alex/GolandProjects/LocalAI/sources/go-tiny-dream
+
+replace github.com/mudler/go-piper => /home/alex/GolandProjects/LocalAI/sources/go-piper
+
+replace github.com/mudler/go-stable-diffusion => /home/alex/GolandProjects/LocalAI/sources/go-stable-diffusion
+
+replace github.com/nomic-ai/gpt4all/gpt4all-bindings/golang => /home/alex/GolandProjects/LocalAI/sources/gpt4all/gpt4all-bindings/golang
+
+replace github.com/go-skynet/go-llama.cpp => /home/alex/GolandProjects/LocalAI/sources/go-llama.cpp
